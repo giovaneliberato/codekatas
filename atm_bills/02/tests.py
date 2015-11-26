@@ -25,5 +25,23 @@ class TestAtm(unittest.TestCase):
         self.assertEquals(result, '50 | 20')
         self.assertEquals(atm.bills, {50: 0, 20: 0})
 
+    def test_withdraw_not_using_all_the_values(self):
+        atm = Atm({50: 1, 10: 1, 20: 2})
+        result = atm.withdraw(40)
+        self.assertEquals(result, '20 | 20')
+        self.assertEquals(atm.bills, {50: 1, 10: 1, 20: 0})
+
+    def test_always_gives_the_minimun_amount_of_bills(self):
+        atm = Atm({50: 1, 10: 4, 20: 2})
+        result = atm.withdraw(40)
+        self.assertEquals(result, '20 | 20')
+        self.assertEquals(atm.bills, {50: 1, 10: 4, 20: 0})
+
+    def test_doesnt_complete_te_operation_if_bills_not_available(self):
+        atm = Atm({50: 2, 10: 1, 20: 0})
+        self.assertRaises(ValueError, atm.withdraw, 120)
+        self.assertEquals(atm.bills, {50: 2, 10: 1, 20: 0})
+
+
 if __name__ == '__main__':
     unittest.main()
